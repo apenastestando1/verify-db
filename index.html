@@ -461,6 +461,15 @@ const iconRefresh = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" 
 
 const avatarPalette = ['#5865f2', '#2fd8a6', '#ff5c72', '#f5a623', '#8b7cf6', '#3ab7ff'];
 
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function hashColor(str) {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = str.charCodeAt(i) + ((h << 5) - h);
@@ -475,7 +484,7 @@ function showToast(message, type) {
   const region = document.getElementById('toastRegion');
   const el = document.createElement('div');
   el.className = 'toast ' + type;
-  el.innerHTML = (type === 'success' ? iconCheck : iconX) + '<span>' + message + '</span>';
+  el.innerHTML = (type === 'success' ? iconCheck : iconX) + '<span>' + esc(message) + '</span>';
   region.appendChild(el);
   setTimeout(() => {
     el.classList.add('leaving');
@@ -557,8 +566,8 @@ async function loadStats() {
         .map(g => {
           const color = hashColor(g.name);
           return '<div class="guild">' +
-            '<div class="g-avatar" style="background:' + color + '">' + initials(g.name) + '</div>' +
-            '<span class="g-name">' + g.name + '</span>' +
+            '<div class="g-avatar" style="background:' + color + '">' + esc(initials(g.name)) + '</div>' +
+            '<span class="g-name">' + esc(g.name) + '</span>' +
             '<span class="g-count">' + g.memberCount.toLocaleString('pt-BR') + '</span>' +
           '</div>';
         }).join('');
@@ -652,14 +661,14 @@ async function addMembers() {
 
     if (d.error) {
       resultsTitle.innerHTML = 'Erro na operação';
-      box.innerHTML = '<div class="result fail"><span class="r-icon">' + iconX + '</span>' + d.error + '</div>';
+      box.innerHTML = '<div class="result fail"><span class="r-icon">' + iconX + '</span>' + esc(d.error) + '</div>';
       showToast(d.error, 'error');
     } else {
-      resultsTitle.innerHTML = 'Resultados para: <b>' + d.guildName + '</b>';
+      resultsTitle.innerHTML = 'Resultados para: <b>' + esc(d.guildName) + '</b>';
       box.innerHTML = d.results.map(res =>
         res.success
-          ? '<div class="result ok"><span class="r-icon">' + iconCheck + '</span>' + (res.username || res.userId) + ' adicionado</div>'
-          : '<div class="result fail"><span class="r-icon">' + iconX + '</span>' + (res.userId || res.username) + ' — ' + res.error + '</div>'
+          ? '<div class="result ok"><span class="r-icon">' + iconCheck + '</span>' + esc(res.username || res.userId) + ' adicionado</div>'
+          : '<div class="result fail"><span class="r-icon">' + iconX + '</span>' + esc(res.userId || res.username) + ' — ' + esc(res.error) + '</div>'
       ).join('');
       const okCount = d.results.filter(r => r.success).length;
       showToast(okCount + ' de ' + d.results.length + ' membros adicionados', okCount > 0 ? 'success' : 'error');
