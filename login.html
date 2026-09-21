@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entrar — Painel do Bot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090d;
+    --surface-1: #131420;
+    --surface-2: #1a1c2b;
+    --surface-3: #22243610;
+    --border: #24263a;
+    --border-strong: #35384f;
+    --accent: #5865f2;
+    --accent-dim: #4650c9;
+    --accent-bg: rgba(88,101,242,0.12);
+    --accent-glow: rgba(88,101,242,0.28);
+    --text-1: #f3f4f9;
+    --text-2: #979bb3;
+    --text-3: #5e6178;
+    --danger: #ff5c72;
+    --danger-bg: rgba(255,92,114,0.12);
+    --radius-lg: 16px;
+    --radius-sm: 8px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(900px 500px at 18% 10%, rgba(88,101,242,0.14), transparent 60%),
+      radial-gradient(700px 420px at 85% 90%, rgba(88,101,242,0.08), transparent 55%),
+      var(--bg);
+    color: var(--text-1);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+  .card {
+    width: 100%; max-width: 360px;
+    background: linear-gradient(180deg, var(--surface-1), #101120);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 1.85rem 1.85rem;
+    box-shadow: 0 24px 60px -20px rgba(0,0,0,0.6);
+    animation: fade-in-up 0.45s var(--ease) both;
+  }
+
+  .brand { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; margin-bottom: 1.75rem; }
+  .brand-icon {
+    width: 50px; height: 50px; border-radius: 13px;
+    background: linear-gradient(150deg, var(--accent), var(--accent-dim));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px var(--accent-glow);
+  }
+  .brand-icon svg { width: 24px; height: 24px; stroke: #fff; }
+  .brand-text { text-align: center; }
+  .brand-text h1 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 0.25rem; }
+  .brand-text p { font-size: 0.83rem; color: var(--text-3); }
+
+  form { display: flex; flex-direction: column; gap: 1rem; }
+
+  .field { position: relative; }
+  label {
+    display: block; font-size: 0.78rem; font-weight: 600;
+    color: var(--text-2); margin-bottom: 0.5rem;
+  }
+  input {
+    width: 100%; padding: 0.75rem 2.6rem 0.75rem 0.9rem;
+    border-radius: var(--radius-sm); border: 1px solid var(--border);
+    background: #0d0e17; color: var(--text-1); font-size: 0.92rem;
+    font-family: inherit; outline: none;
+    transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+  }
+  input::placeholder { color: var(--text-3); }
+  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+  input.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg); }
+
+  .toggle-visibility {
+    position: absolute; right: 0.6rem; top: 2.15rem;
+    background: none; border: none; color: var(--text-3); cursor: pointer;
+    padding: 0.3rem; display: flex; border-radius: 6px; transition: color 0.15s var(--ease);
+  }
+  .toggle-visibility:hover { color: var(--text-2); }
+  .toggle-visibility svg { width: 17px; height: 17px; }
+
+  .err {
+    display: none; align-items: center; gap: 0.5rem;
+    background: var(--danger-bg); border: 1px solid rgba(255,92,114,0.3);
+    color: #ffd6dc; padding: 0.65rem 0.8rem; border-radius: var(--radius-sm);
+    font-size: 0.83rem; font-weight: 500;
+    animation: shake 0.4s var(--ease);
+  }
+  .err.show { display: flex; }
+  .err svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--danger); }
+
+  button[type="submit"] {
+    padding: 0.8rem 1rem; border: none; border-radius: var(--radius-sm);
+    background: var(--accent); color: #fff; font-size: 0.92rem; font-weight: 700;
+    font-family: inherit; cursor: pointer; margin-top: 0.3rem;
+    display: flex; align-items: center; justify-content: center; gap: 0.55rem;
+    box-shadow: 0 8px 22px -6px var(--accent-glow);
+    transition: all 0.16s var(--ease);
+  }
+  button[type="submit"]:hover { background: var(--accent-dim); transform: translateY(-1px); box-shadow: 0 12px 28px -6px var(--accent-glow); }
+  button[type="submit"]:active { transform: translateY(0); }
+  button[type="submit"]:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .spin { animation: spin 0.8s linear infinite; }
+  @keyframes spin { 100% { transform: rotate(360deg); } }
+  @keyframes fade-in-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+    </div>
+    <div class="brand-text">
+      <h1>Painel do Bot</h1>
+      <p>Entre com a senha de acesso</p>
+    </div>
+  </div>
+
+  <div class="err" id="err">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Senha incorreta. Tente novamente.
+  </div>
+
+  <form method="POST" action="/login" id="loginForm">
+    <div class="field">
+      <label for="password">Senha</label>
+      <input type="password" name="password" id="password" placeholder="••••••••" required autofocus autocomplete="current-password">
+      <button type="button" class="toggle-visibility" id="toggleBtn" aria-label="Mostrar senha">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <button type="submit" id="submitBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Entrar
+    </button>
+  </form>
+</div>
+
+<script>
+  const eyeOpen = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const eyeClosed = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a19.87 19.87 0 0 1 4.22-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a19.86 19.86 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+  const passwordInput = document.getElementById('password');
+  const toggleBtn = document.getElementById('toggleBtn');
+  toggleBtn.addEventListener('click', () => {
+    const isPassword = passwordInput.type === 'password';
+    passwordInput.type = isPassword ? 'text' : 'password';
+    toggleBtn.innerHTML = isPassword ? eyeClosed : eyeOpen;
+    toggleBtn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+  });
+
+  if (new URLSearchParams(location.search).has('error')) {
+    const err = document.getElementById('err');
+    err.classList.add('show');
+    passwordInput.classList.add('invalid');
+    passwordInput.select();
+  }
+
+  document.getElementById('loginForm').addEventListener('submit', () => {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Entrando...';
+  });
+</script>
+</body>
+</html>
