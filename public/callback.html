@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verificação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090d;
+    --surface-1: #131420;
+    --surface-2: #1a1c2b;
+    --border: #24263a;
+    --border-strong: #35384f;
+    --accent: #5865f2;
+    --accent-dim: #4650c9;
+    --accent-glow: rgba(88,101,242,0.28);
+    --text-1: #f3f4f9;
+    --text-2: #979bb3;
+    --text-3: #5e6178;
+    --success: #2fd8a6;
+    --success-bg: rgba(47,216,166,0.12);
+    --danger: #ff5c72;
+    --danger-bg: rgba(255,92,114,0.12);
+    --warning: #f5a623;
+    --warning-bg: rgba(245,166,35,0.12);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background:
+      radial-gradient(1000px 500px at 50% -10%, rgba(88,101,242,0.14), transparent 60%),
+      radial-gradient(700px 400px at 50% 110%, rgba(47,216,166,0.06), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    color: var(--text-1);
+    -webkit-font-smoothing: antialiased;
+  }
+  .card {
+    background: linear-gradient(180deg, var(--surface-1), #101120);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem 2rem 2.25rem;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
+    animation: pop 0.5s var(--ease);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(16px) scale(0.98); }
+    to { opacity: 1; transform: none; }
+  }
+  .icon-wrap {
+    width: 88px; height: 88px; margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .icon-wrap::before {
+    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+    animation: pulse 2.2s ease-in-out infinite;
+  }
+  .icon-wrap svg { width: 42px; height: 42px; position: relative; z-index: 1; }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0; transform: scale(1.18); }
+  }
+  .card.success .icon-wrap { background: var(--success-bg); color: var(--success); border: 2px solid rgba(47,216,166,0.35); }
+  .card.success .icon-wrap::before { background: var(--success-bg); }
+  .card.error .icon-wrap { background: var(--danger-bg); color: var(--danger); border: 2px solid rgba(255,92,114,0.35); }
+  .card.error .icon-wrap::before { background: var(--danger-bg); }
+  .card.cancelled .icon-wrap { background: var(--warning-bg); color: var(--warning); border: 2px solid rgba(245,166,35,0.35); }
+  .card.cancelled .icon-wrap::before { background: var(--warning-bg); }
+  h1 {
+    font-size: 1.45rem; font-weight: 700;
+    margin-bottom: 0.7rem; letter-spacing: -0.02em;
+  }
+  p { color: var(--text-2); font-size: 0.95rem; line-height: 1.6; }
+  .username {
+    display: inline-block;
+    background: var(--surface-2); border: 1px solid var(--border);
+    padding: 0.15rem 0.55rem; border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    color: #b9c0ff;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-top: 1.75rem; padding: 0.75rem 1.5rem;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 10px;
+    font-family: inherit; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; text-decoration: none;
+    transition: all 0.16s var(--ease);
+    box-shadow: 0 6px 20px -6px var(--accent-glow);
+  }
+  .btn:hover { background: var(--accent-dim); transform: translateY(-1px); }
+  .btn svg { width: 16px; height: 16px; }
+  .footnote {
+    margin-top: 1.5rem; color: var(--text-3); font-size: 0.78rem;
+  }
+</style>
+</head>
+<body>
+  <div class="card" id="card">
+    <div class="icon-wrap" id="iconWrap"></div>
+    <h1 id="title">Processando...</h1>
+    <p id="message">Aguarde um instante.</p>
+    <a href="https://discord.com/app" class="btn" id="btn" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Voltar ao Discord
+    </a>
+    <div class="footnote">Pode fechar esta página quando quiser.</div>
+  </div>
+
+<script>
+const icons = {
+  success: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+  error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+  cancelled: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+};
+
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+const params = new URLSearchParams(location.search);
+const status = params.get('status') || 'error';
+const username = params.get('user');
+const msgParam = params.get('message');
+
+const card = document.getElementById('card');
+const iconWrap = document.getElementById('iconWrap');
+const title = document.getElementById('title');
+const messageEl = document.getElementById('message');
+const btn = document.getElementById('btn');
+
+if (status === 'success') {
+  card.classList.add('success');
+  iconWrap.innerHTML = icons.success;
+  title.textContent = 'Verificação concluída!';
+  messageEl.innerHTML = username
+    ? 'Conta <span class="username">' + esc(username) + '</span> verificada com sucesso.<br>Seu cargo será atribuído automaticamente nos servidores.'
+    : 'Sua conta foi verificada com sucesso.<br>Seu cargo será atribuído automaticamente nos servidores.';
+  btn.style.display = 'inline-flex';
+} else if (status === 'cancelled') {
+  card.classList.add('cancelled');
+  iconWrap.innerHTML = icons.cancelled;
+  title.textContent = 'Autorização cancelada';
+  messageEl.innerHTML = 'Você fechou ou negou a autorização no Discord.<br>Se mudar de ideia, clique no botão de verificação novamente.';
+  btn.style.display = 'inline-flex';
+} else {
+  card.classList.add('error');
+  iconWrap.innerHTML = icons.error;
+  title.textContent = 'Algo deu errado';
+  messageEl.textContent = msgParam || 'Não foi possível concluir a verificação. Tente novamente.';
+  btn.style.display = 'inline-flex';
+}
+</script>
+</body>
+</html>
