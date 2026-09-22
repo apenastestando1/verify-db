@@ -4,9 +4,10 @@ let client;
 let db;
 
 async function connect() {
-  client = new MongoClient(process.env.MONGODB_URI, {
-    serverSelectionTimeoutMS: 10000
-  });
+   client = new MongoClient(process.env.MONGODB_URI, {
+     serverSelectionTimeoutMS: 10000,
+     autoSelectFamily: false
+   });
 
   await client.connect();
   db = client.db(process.env.MONGODB_DB || 'bot-verificacao');
